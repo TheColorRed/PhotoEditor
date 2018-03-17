@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    // "strict": true,
+    "outDir": "../../../app/js/client",
+    "inlineSourceMap": true,
+    "declaration": true,
+    "declarationDir": "../../../types/client"
+  },
+  "include": [
+    "**/*.ts",
+  ]
+}

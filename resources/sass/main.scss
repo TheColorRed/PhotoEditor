@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+
+  .root {
+    display: flex;
+    flex-direction: column;
+
+    .options {
+      display: flex;
+      flex-direction: row;
+      height: 50px;
+      background: #222;
+      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+      z-index: 101;
+    }
+
+    .workspace {
+      display: flex;
+      flex-direction: row;
+      height: calc(100vh - 50px);
+
+      .workarea {
+        display: flex;
+        background-color: #444;
+        height: inherit;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .panels {
+        width: 300px;
+        background: #333;
+        height: inherit;
+        box-shadow: -2px 0 2px rgba(0, 0, 0, 0.5);
+        z-index: 100;
+      }
+    }
+  }
+}
+@import './components/canvas';
+@import './components/tools';

@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Main Process",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
+      "runtimeArgs": [
+        "--inspect-brk=9229",
+        "--nolazy"
+      ],
+      "program": "${workspaceRoot}/resources/typescript/server/index.ts",
+      "outFiles": [
+        "${workspaceRoot}/app/js/server/index.js"
+      ],
+      "internalConsoleOptions": "openOnSessionStart",
+      "outputCapture": "std",
+      "sourceMaps": true,
+      "port": 9229,
+      "protocol": "inspector"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+extends ../index
+block content
+  //- script(src=`../../js/client/main.js` type='module')
+  script require('#{js}/main')
+  .root
+    .options
+    .workspace
+      .tools
+      .workarea
+        canvas#primary(width='800' height='600')
+        canvas#bg(width='800' height='600')
+      .panels

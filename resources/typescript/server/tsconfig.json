@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    // "strict": true,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "../../../app/js/server",
+    "declarationDir": "../../../types/server"
+  },
+  "include": [
+    "core/**/*.ts",
+    "components/**/*.ts",
+    "api.ts",
+    "index.ts"
+  ]
+}

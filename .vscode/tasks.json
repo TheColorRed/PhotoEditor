@@ -1,0 +1,78 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "group": "build",
+      "label": "Build",
+      "type": "shell",
+      "dependsOn": [
+        "Build Server",
+        "Build Client",
+        "Build Sass",
+        "Build Pug",
+        "Copy Assets",
+      ],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Build Server",
+      "command": "tsc",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "type": "shell",
+      "args": [
+        "-p",
+        "./resources/typescript/server",
+        "-w"
+      ]
+    },
+    {
+      "label": "Build Client",
+      "command": "tsc",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "type": "shell",
+      "args": [
+        "-p",
+        "./resources/typescript/client",
+        "-w"
+      ]
+    },
+    {
+      "label": "Build Components",
+      "command": "tsc",
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
+      "type": "shell",
+      "args": [
+        "-p",
+        "./resources/typescript/components",
+        "-w"
+      ]
+    },
+    {
+      "label": "Build Sass",
+      "type": "shell",
+      "command": "watch \"node-sass --output-style=compressed resources/sass --output=app/css\" ./resources/sass --interval=1"
+    },
+    {
+      "label": "Build Pug",
+      "type": "shell",
+      "command": "watch \"rm -rf ./app/views && cp -r ./resources/views ./app/views\" ./resources/views --interval=1"
+    },
+    {
+      "label": "Copy Assets",
+      "type": "shell",
+      "command": "watch \"rm -rf ./app/assets && cp -r ./resources/assets ./app/assets\" ./resources/assets --interval=1"
+    },
+    {
+      "label": "ASAR",
+      "type": "shell",
+      "command": "watch \"asar pack app ./build/app.asar\" ./app --interval=1"
+    }
+  ]
+}
