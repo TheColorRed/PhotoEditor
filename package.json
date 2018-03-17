@@ -18,8 +18,14 @@
     "devDependencies": {
         "@types/electron-winstaller": "^2.6.1",
         "@types/glob": "^5.0.35",
+        "@types/gulp": "^4.0.5",
         "asar": "^0.14.3",
         "electron-winstaller": "^2.6.4",
+        "gulp": "^3.9.1",
+        "gulp-sass": "^3.1.0",
+        "gulp-sourcemaps": "^2.6.4",
+        "gulp-typescript": "^4.0.1",
+        "typescript": "^2.7.2",
         "watch": "^1.0.2"
     }
 }
