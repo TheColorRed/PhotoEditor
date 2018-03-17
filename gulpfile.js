@@ -20,6 +20,8 @@ gulp.task('client sourcemaps', () => {
 gulp.task('server sourcemaps', () => {
   return gulp.src('./app/js/server/**/*.js')
     .pipe(sourcemaps.init())
+    .pipe(sourcemaps.mapSources((sourcePath, file) => '../../../resources/typescript/server/' + sourcePath.replace(/\.js$/, '.ts')))
+    .pipe(sourcemaps.identityMap())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./app/js/server'))
 })
