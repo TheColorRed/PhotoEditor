@@ -1,4 +1,4 @@
-import { paths, tool, registerPlugin } from "../../api";
+import { paths, tool } from "../../api";
 
 export class cropTool extends tool {
   public toolName = 'Crop'
@@ -6,6 +6,6 @@ export class cropTool extends tool {
   public settings = []
 }
 
-registerPlugin({
-  tool: cropTool
-})
+// registerPlugin({
+//   tool: cropTool
+// })

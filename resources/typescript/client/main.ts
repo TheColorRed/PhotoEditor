@@ -1,34 +1,30 @@
 import { ipcRenderer, remote } from 'electron'
 import { image } from './image';
 import { canvas, tool } from '../api'
+import * as glob from 'glob'
+import * as path from 'path'
+import { addons, addon, addonType } from './plugin';
+import { plugin, pluginGroup } from './plugin/plugin';
 document.addEventListener('DOMContentLoaded', e => {
-  let canvas = document.querySelector('canvas#primary') as HTMLCanvasElement
+  let mainCanvas = document.querySelector('canvas#primary') as HTMLCanvasElement
   let canvasBg = document.querySelector('canvas#bg') as HTMLCanvasElement
-  let ctx = canvas.getContext('2d')
-  let canvasRect = canvas.getBoundingClientRect()
+  let ctx = mainCanvas.getContext('2d')
+  let canvasRect = mainCanvas.getBoundingClientRect()
 
-  let canvasPlugins: canvas[] = []
-
-  ipcRenderer.send('init')
-  ipcRenderer.on('load-tool', async (evt: Event, id: string) => {
-    let tool = remote.require('../api').getTool(id) as tool
-    if (!tool) return
-    let tools = document.querySelector('.tools') as HTMLDivElement
-    let icon = await image.svg(tool.toolbarIcon.icon)
-    let span = document.createElement('span')
-    let btn = document.createElement('span')
-    btn.classList.add('btn')
-    span.classList.add('tool')
-    span.appendChild(btn)
-    btn.appendChild(icon)
-    tools.appendChild(span)
-    return
-  })
-
-  ipcRenderer.on('init-canvas', (evt: Event, id: string) => {
-    let canvasPlugin = require('../components/brush/canvas').default
-    let plugin = new canvasPlugin(canvas) as canvas
-    canvasPlugins.push(plugin)
+  glob(path.join(__dirname, '../plugins/**/index.js'), (err, files) => {
+    files.forEach(file => {
+      let p: { [key: string]: any } = require(file) as addons
+      let pg: pluginGroup = new pluginGroup
+      for (let i in p) {
+        let item = p[i]
+        try {
+          let p = new item(pg.id)
+          p instanceof tool && p.init()
+          pg.add(p)
+        } catch (e) { console.error(e.message) }
+      }
+      pg.loaded()
+    })
   })
 
   function drawBG() {
@@ -49,7 +45,9 @@ document.addEventListener('DOMContentLoaded', e => {
   }
 
   window.addEventListener('resize', e => {
-    canvasPlugins.forEach(c => c.resized())
+    plugin.plugins.forEach(c => {
+      c.plugins.forEach(c => c instanceof canvas && c.resized())
+    })
     drawBG()
   })
 

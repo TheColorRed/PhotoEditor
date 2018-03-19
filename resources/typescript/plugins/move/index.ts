@@ -1,4 +1,4 @@
-import { paths, tool, registerPlugin } from "../../api";
+import { paths, tool } from "../../api";
 
 export class moveTool extends tool {
   public toolName = 'Move'
@@ -6,6 +6,6 @@ export class moveTool extends tool {
   public settings = []
 }
 
-registerPlugin({
-  tool: moveTool
-})
+// registerPlugin({
+//   tool: moveTool
+// })

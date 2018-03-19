@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
 import * as path from 'path'
 import * as glob from 'glob'
-import { plugin } from './core';
+// import { plugin } from './core';
 const reload = require('electron-reload')
 
 const root = path.join(__dirname, '../../')
@@ -65,14 +65,14 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
     })
   }
 
-  ipcMain.on('init', (e: Event) => {
-    glob(path.join(__dirname, './components/**/index.js'), (err, files) => {
-      files.forEach(file => {
-        require(file)
-        delete require.cache[require.resolve(file)]
-      })
-    })
-  })
+  // ipcMain.on('init', (e: Event) => {
+  //   glob(path.join(__dirname, './components/**/index.js'), (err, files) => {
+  //     files.forEach(file => {
+  //       require(file)
+  //       delete require.cache[require.resolve(file)]
+  //     })
+  //   })
+  // })
 
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.

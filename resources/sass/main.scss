@@ -5,19 +5,13 @@
 body {
   padding: 0;
   margin: 0;
+  user-select: none;
+  font-family: sans-serif;
+  letter-spacing: 1px;
 
   .root {
     display: flex;
     flex-direction: column;
-
-    .options {
-      display: flex;
-      flex-direction: row;
-      height: 50px;
-      background: #222;
-      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
-      z-index: 101;
-    }
 
     .workspace {
       display: flex;
@@ -45,3 +39,4 @@ body {
 }
 @import './components/canvas';
 @import './components/tools';
+@import './components/options';
