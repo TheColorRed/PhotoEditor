@@ -1,23 +1,20 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import { image } from './image';
-// import { toolPlugin } from '../server/core/plugin/plugin'
+import { canvas, tool } from '../api'
 document.addEventListener('DOMContentLoaded', e => {
   let canvas = document.querySelector('canvas#primary') as HTMLCanvasElement
   let canvasBg = document.querySelector('canvas#bg') as HTMLCanvasElement
-  // let workarea = document.querySelector('.workarea') as HTMLDivElement
   let ctx = canvas.getContext('2d')
   let canvasRect = canvas.getBoundingClientRect()
 
-  let isDrawing = false
-  let strokeWidth = 100
-  let mouse = { x: 0, y: 0 }
-  let path: Path2D
+  let canvasPlugins: canvas[] = []
 
   ipcRenderer.send('init')
-  ipcRenderer.on('load-tool', async (evt, tool) => {
+  ipcRenderer.on('load-tool', async (evt: Event, id: string) => {
+    let tool = remote.require('../api').getTool(id) as tool
+    if (!tool) return
     let tools = document.querySelector('.tools') as HTMLDivElement
-    console.log(tool)
-    let icon = await image.svg(tool.icon.icon)
+    let icon = await image.svg(tool.toolbarIcon.icon)
     let span = document.createElement('span')
     let btn = document.createElement('span')
     btn.classList.add('btn')
@@ -28,8 +25,16 @@ document.addEventListener('DOMContentLoaded', e => {
     return
   })
 
+  ipcRenderer.on('init-canvas', (evt: Event, id: string) => {
+    let canvasPlugin = require('../components/brush/canvas').default
+    let plugin = new canvasPlugin(canvas) as canvas
+    canvasPlugins.push(plugin)
+  })
+
   function drawBG() {
     let ctx = canvasBg.getContext('2d')
+    if (!ctx) return
+    ctx.clearRect(0, 0, canvasBg.width, canvasBg.height)
     let width = canvasBg.width
     let height = canvasBg.height
     let squareSize = 15
@@ -44,47 +49,9 @@ document.addEventListener('DOMContentLoaded', e => {
   }
 
   window.addEventListener('resize', e => {
-    canvasRect = canvas.getBoundingClientRect()
+    canvasPlugins.forEach(c => c.resized())
+    drawBG()
   })
-
-  canvas.addEventListener('mouseenter', e => {
-    canvas.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="${strokeWidth}" width="${strokeWidth}"><circle cx="${strokeWidth / 2}" cy="${strokeWidth / 2}" r="${strokeWidth / 2}" stroke="gray" stroke-width="1" fill="transparent" /></svg>') 50 50, auto`
-  })
-
-  window.addEventListener('mousedown', e => {
-    isDrawing = true
-    path = new Path2D
-    ctx.lineWidth = strokeWidth
-    ctx.lineJoin = ctx.lineCap = 'round'
-    ctx.shadowBlur = 10
-    ctx.shadowColor = '#000'
-    ctx.strokeStyle = '#000'
-    path.moveTo(mouse.x, mouse.y)
-    path.lineTo(mouse.x, mouse.y)
-  })
-
-  window.addEventListener('mouseup', e => {
-    isDrawing = false
-  })
-
-  canvas.addEventListener('mousemove', e => {
-    mouse.x = e.clientX - canvasRect.left
-    mouse.y = e.clientY - canvasRect.top
-    if (isDrawing) {
-      path.lineTo(mouse.x, mouse.y)
-    }
-  })
-
-  function draw() {
-    if (isDrawing) {
-      ctx.stroke(path)
-      path = new Path2D
-      path.moveTo(mouse.x, mouse.y)
-    }
-    requestAnimationFrame(draw)
-  }
-
-  requestAnimationFrame(draw)
 
   drawBG()
 

@@ -1,8 +1,5 @@
 import * as path from 'path'
+import { plugin } from '.';
 export * from './plugin/plugin'
 export * from './plugin/tools'
-
-export const paths = {
-  images: path.join(__dirname, '../../../', 'assets/images').replace(/\\/g, '/'),
-  fonts: path.join(__dirname, '../../../', 'assets/fonts').replace(/\\/g, '/')
-}
+export * from './plugin/canvas'

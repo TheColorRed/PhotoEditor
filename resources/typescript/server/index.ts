@@ -1,8 +1,8 @@
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
-import * as reload from 'electron-reload'
 import * as path from 'path'
 import * as glob from 'glob'
 import { plugin } from './core';
+const reload = require('electron-reload')
 
 const root = path.join(__dirname, '../../')
 const locals = {
@@ -46,7 +46,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
     mainWindow.loadURL(`file://${views}/windows/main.pug`)
 
     // Open the DevTools.
-    // global.web.openDevTools()
+    global.web.openDevTools()
 
     // Emitted when the window is closed.
     mainWindow.on('closed', () => {
@@ -57,15 +57,15 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
     })
 
     global.web.on('dom-ready', e => {
-      ipcMain.on('get-tool', (evt, arg) => {
-        // console.log(evt)
-        // console.log(arg)
-      })
-      mainWindow.show()
+      // ipcMain.on('get-tool', (evt, arg) => {
+      //   // console.log(evt)
+      //   // console.log(arg)
+      // })
+      mainWindow && mainWindow.show()
     })
   }
 
-  ipcMain.on('init', e => {
+  ipcMain.on('init', (e: Event) => {
     glob(path.join(__dirname, './components/**/index.js'), (err, files) => {
       files.forEach(file => {
         require(file)

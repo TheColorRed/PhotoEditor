@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    // "strict": true,
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "../../../app/js/api",
+    "declarationDir": "../../../types/api"
+  },
+  "include": [
+    "index.ts"
+  ]
+}

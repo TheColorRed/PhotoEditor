@@ -26,8 +26,17 @@ gulp.task('server sourcemaps', () => {
     .pipe(gulp.dest('./app/js/server'))
 })
 
-gulp.task('client', () => buildTypeScript('./resources/typescript/client/tsconfig.json', './app/js/client').on('end', () => gulp.start('client sourcemaps')))
-gulp.task('server', () => buildTypeScript('./resources/typescript/server/tsconfig.json', './app/js/server').on('end', () => gulp.start('server sourcemaps')))
+gulp.task('api sourcemaps', () => {
+  return gulp.src('./app/js/api/**/*.js')
+    .pipe(sourcemaps.init())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./app/js/api'))
+})
+
+// gulp.task('client', () => buildTypeScript('./resources/typescript/client/tsconfig.json', './app/js/client').on('end', () => gulp.start('client sourcemaps')))
+// gulp.task('server', () => buildTypeScript('./resources/typescript/server/tsconfig.json', './app/js/server').on('end', () => gulp.start('server sourcemaps')))
+// gulp.task('api', () => buildTypeScript('./resources/typescript/api/tsconfig.json', './app/js/api').on('end', () => gulp.start('api sourcemaps')))
+gulp.task('typescript', () => buildTypeScript('./resources/typescript/tsconfig.json', './app/js').on('end', () => gulp.start(['server sourcemaps', 'client sourcemaps', 'api sourcemaps'])))
 
 gulp.task('sass', () => {
   return gulp.src('./resources/sass/*.scss')
@@ -38,9 +47,9 @@ gulp.task('sass', () => {
 gulp.task('copy pug', () => gulp.src('./resources/views/**/*.pug').pipe(gulp.dest('./app/views')))
 gulp.task('copy assets', () => gulp.src('./resources/assets/**/*').pipe(gulp.dest('./app/assets')))
 
-gulp.task('build', ['client', 'server', 'sass', 'copy pug', 'copy assets'], () => {
-  gulp.watch('./resources/typescript/client/**/*', ['client'])
-  gulp.watch('./resources/typescript/server/**/*', ['server'])
+gulp.task('build', ['typescript', 'sass', 'copy pug', 'copy assets'], () => {
+  gulp.watch('./resources/typescript/**/*', ['typescript'])
   gulp.watch('./resources/views/**/*.pug', ['copy pug'])
   gulp.watch('./resources/assets/**/*', ['copy assets'])
+  gulp.watch('./resources/sass/**/*.scss', ['sass'])
 })

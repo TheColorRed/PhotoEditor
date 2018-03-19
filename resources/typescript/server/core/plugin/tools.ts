@@ -15,6 +15,6 @@ export interface toolIcon {
 
 export abstract class tool extends plugin {
   abstract toolName: string
-  abstract toobarIcon: toolIcon
+  abstract toolbarIcon: toolIcon
   abstract settings: toolSettings[]
 }

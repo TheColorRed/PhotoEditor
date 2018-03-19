@@ -1,4 +1,10 @@
 canvas {
+  &#draft {
+    position: absolute;
+    z-index: 102;
+    pointer-events: none;
+  }
+
   &#primary {
     z-index: 101;
   }

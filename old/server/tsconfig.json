@@ -11,7 +11,6 @@
   "include": [
     "core/**/*.ts",
     "components/**/*.ts",
-    "api.ts",
     "index.ts"
   ]
 }

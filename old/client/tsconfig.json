@@ -3,9 +3,9 @@
     "target": "es6",
     "module": "commonjs",
     // "strict": true,
-    "outDir": "../../../app/js/client",
     "inlineSourceMap": true,
     "declaration": true,
+    "outDir": "../../../app/js/client",
     "declarationDir": "../../../types/client"
   },
   "include": [
