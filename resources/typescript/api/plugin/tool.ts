@@ -1,5 +1,6 @@
 import { plugin } from "./plugin";
 import { image } from "../../client/image";
+import { canvas } from "..";
 
 export interface toolSetting {
   label: string
@@ -40,6 +41,8 @@ export abstract class tool extends plugin {
   abstract toolbarIcon: toolIcon
   abstract settings: toolSetting[]
 
+  public static activeTool?: tool
+
   public async init() {
     let tools = document.querySelector('.tools') as HTMLDivElement
     let icon = await image.svg(this.toolbarIcon.icon)
@@ -50,8 +53,13 @@ export abstract class tool extends plugin {
     mainTool.appendChild(btn)
     btn.appendChild(icon)
     tools.appendChild(mainTool)
+    mainTool.title = this.toolbarIcon.label
 
     mainTool.addEventListener('click', e => {
+      Array.from(tools.querySelectorAll('.tool')).forEach(tool => tool.classList.remove('active'))
+      mainTool.classList.add('active')
+      tool.activeTool = this
+      plugin.plugins.forEach(pg => pg.plugins.forEach(p => p instanceof canvas && p.onTool()))
       let options = document.querySelector('.options') as HTMLDivElement
       options.innerHTML = ''
       this.settings.forEach(setting => {

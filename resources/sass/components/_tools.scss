@@ -36,7 +36,8 @@
       }
     }
 
-    & > .btn:hover {
+    & > .btn:hover,
+    &.active > .btn {
       background: #222;
       border: solid 1px #555;
 

@@ -26,6 +26,7 @@
         "gulp-sourcemaps": "^2.6.4",
         "gulp-typescript": "^4.0.1",
         "node-sass": "^4.7.2",
+        "rimraf": "^2.6.2",
         "typescript": "^2.7.2",
         "watch": "^1.0.2"
     }

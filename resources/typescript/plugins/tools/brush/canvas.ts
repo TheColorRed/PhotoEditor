@@ -1,9 +1,7 @@
-import { canvas } from "../../../api"
-
-interface point { x: number, y: number }
+import { canvas, color, point } from "../../../api"
 
 export class brushCanvas extends canvas {
-  private lineWidth: number = 100// parseFloat(this.toolSettings.get('size').default.toString())
+  private lineWidth: number = 100
   private isDrawing = false
   private opacity: number = 1
   private lastPoint: point = { x: 0, y: 0 }
@@ -19,13 +17,14 @@ export class brushCanvas extends canvas {
   }
 
   public mousedown(e: MouseEvent) {
+    if (!this.onCanvas || e.button != 0) return
     this.isDrawing = true
     this.draftCtx.lineWidth = this.lineWidth
     this.draftCtx.lineJoin = this.draftCtx.lineCap = 'round'
     this.draftCtx.shadowBlur = 10
-    this.draftCtx.shadowColor = 'red'
-    this.draftCtx.strokeStyle = 'red'
-    this.draftCtx.fillStyle = 'red'
+    this.draftCtx.shadowColor = e.ctrlKey ? color.current.bg : color.current.fg
+    this.draftCtx.strokeStyle = e.ctrlKey ? color.current.bg : color.current.fg
+    this.draftCtx.fillStyle = e.ctrlKey ? color.current.bg : color.current.fg
     this.draft.style.opacity = this.opacity.toString()
     this.primaryCTX.globalAlpha = this.opacity
     this.lastPoint = { x: this.mouse.x, y: this.mouse.y }
@@ -51,8 +50,7 @@ export class brushCanvas extends canvas {
     this.draftCtx.stroke()
   }
 
-  public mouseenter() {
-    if (!this.primaryCanvas) return
-    this.primaryCanvas.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="${this.lineWidth}" width="${this.lineWidth}"><circle cx="${this.lineWidth / 2}" cy="${this.lineWidth / 2}" r="${this.lineWidth / 2}" stroke="gray" stroke-width="2" fill="transparent" /></svg>') ${this.lineWidth / 2} ${this.lineWidth / 2}, auto`
+  public cursor() {
+    return `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" height="${this.lineWidth}" width="${this.lineWidth}"><circle cx="${this.lineWidth / 2}" cy="${this.lineWidth / 2}" r="${this.lineWidth / 2}" stroke="gray" stroke-width="2" fill="transparent" /></svg>') ${this.lineWidth / 2} ${this.lineWidth / 2}, auto`
   }
 }

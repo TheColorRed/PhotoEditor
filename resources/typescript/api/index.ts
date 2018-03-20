@@ -5,9 +5,13 @@ export { canvas } from './plugin/canvas'
 export { tool } from './plugin/tool'
 export { panel } from './plugin/panel'
 
+export { color } from './util/color'
+
 export { addon, addons, addonType } from './plugin'
 
 export const paths = {
   images: path.join(__dirname, '../../', 'assets/images').replace(/\\/g, '/'),
   fonts: path.join(__dirname, '../../', 'assets/fonts').replace(/\\/g, '/')
 }
+
+export interface point { x: number, y: number }

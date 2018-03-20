@@ -2,11 +2,11 @@ const gulp = require('gulp')
 const ts = require('gulp-typescript')
 const sourcemaps = require('gulp-sourcemaps')
 const sass = require('gulp-sass')
+const rimraf = require('rimraf')
 
 function buildTypeScript(project, dest) {
   let tsProject = ts.createProject(project)
   let tsResult = tsProject.src().pipe(tsProject())
-
   return tsResult.js.pipe(gulp.dest(dest));
 }
 
@@ -17,13 +17,6 @@ gulp.task('sourcemaps', () => {
     .pipe(gulp.dest('./'))
 })
 
-// gulp.task('client sourcemaps', () => {
-//   return gulp.src('./app/js/client/**/*.js')
-//     .pipe(sourcemaps.init())
-//     .pipe(sourcemaps.write())
-//     .pipe(gulp.dest('./app/js/client'))
-// })
-
 gulp.task('server sourcemaps', () => {
   return gulp.src('./app/js/server/**/*.js')
     .pipe(sourcemaps.init())
@@ -33,26 +26,8 @@ gulp.task('server sourcemaps', () => {
     .pipe(gulp.dest('./app/js/server'))
 })
 
-// gulp.task('api sourcemaps', () => {
-//   return gulp.src('./app/js/api/**/*.js')
-//     .pipe(sourcemaps.init())
-//     .pipe(sourcemaps.write())
-//     .pipe(gulp.dest('./app/js/api'))
-// })
-
-// gulp.task('plugin sourcemaps', () => {
-//   return gulp.src('./app/js/plugins/**/*.js')
-//     .pipe(sourcemaps.init())
-//     .pipe(sourcemaps.write())
-//     .pipe(gulp.dest('./app/js/plugins'))
-// })
-
-// gulp.task('client', () => buildTypeScript('./resources/typescript/client/tsconfig.json', './app/js/client').on('end', () => gulp.start('client sourcemaps')))
-// gulp.task('server', () => buildTypeScript('./resources/typescript/server/tsconfig.json', './app/js/server').on('end', () => gulp.start('server sourcemaps')))
-// gulp.task('api', () => buildTypeScript('./resources/typescript/api/tsconfig.json', './app/js/api').on('end', () => gulp.start('api sourcemaps')))
 gulp.task('typescript', () => buildTypeScript('./resources/typescript/tsconfig.json', './app/js')
   .on('end', () => gulp.start(['sourcemaps', 'server sourcemaps'])))
-// .on('end', () => gulp.start(['server sourcemaps', 'client sourcemaps', 'api sourcemaps', 'plugin sourcemaps'])))
 
 gulp.task('sass', () => {
   return gulp.src('./resources/sass/*.scss')

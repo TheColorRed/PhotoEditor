@@ -5,7 +5,7 @@ export interface panel {
 }
 
 export abstract class panel extends plugin {
-  protected readonly panel = document.createElement('div')
+  public readonly panel = document.createElement('div')
 
   abstract render(): Element
 

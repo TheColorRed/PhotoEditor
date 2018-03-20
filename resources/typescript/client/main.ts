@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', e => {
   let ctx = mainCanvas.getContext('2d')
   let canvasRect = mainCanvas.getBoundingClientRect()
 
-  glob(path.join(__dirname, '../plugins/**/index.js'), (err, files) => {
+  glob(path.join(__dirname, '../plugins/*/*/index.js'), (err, files) => {
     files.forEach(file => {
       let p: { [key: string]: any } = require(file) as addons
       let pg: pluginGroup = new pluginGroup
