@@ -1,4 +1,4 @@
-import { canvas } from "../../api"
+import { canvas } from "../../../api"
 
 interface point { x: number, y: number }
 
@@ -6,7 +6,7 @@ export class brushCanvas extends canvas {
   private lineWidth: number = 100// parseFloat(this.toolSettings.get('size').default.toString())
   private isDrawing = false
   private opacity: number = 1
-  private lastPoint = { x: 0, y: 0 }
+  private lastPoint: point = { x: 0, y: 0 }
 
   public ready() {
     this.lineWidth = this.toolSettings.default('size') as number
@@ -20,7 +20,6 @@ export class brushCanvas extends canvas {
 
   public mousedown(e: MouseEvent) {
     this.isDrawing = true
-    console.log(this.opacity)
     this.draftCtx.lineWidth = this.lineWidth
     this.draftCtx.lineJoin = this.draftCtx.lineCap = 'round'
     this.draftCtx.shadowBlur = 10
@@ -30,6 +29,7 @@ export class brushCanvas extends canvas {
     this.draft.style.opacity = this.opacity.toString()
     this.primaryCTX.globalAlpha = this.opacity
     this.lastPoint = { x: this.mouse.x, y: this.mouse.y }
+    this.draw(this.lastPoint)
   }
 
   public mouseup() {
@@ -40,11 +40,15 @@ export class brushCanvas extends canvas {
   public mousemove(e: MouseEvent) {
     if (!this.isDrawing) return
     let currentPoint = { x: this.mouse.x, y: this.mouse.y }
+    this.draw(currentPoint)
+    this.lastPoint = currentPoint
+  }
+
+  private draw(currentPoint: point) {
     this.draftCtx.beginPath()
     this.draftCtx.moveTo(this.lastPoint.x, this.lastPoint.y)
     this.draftCtx.lineTo(currentPoint.x, currentPoint.y)
     this.draftCtx.stroke()
-    this.lastPoint = currentPoint
   }
 
   public mouseenter() {

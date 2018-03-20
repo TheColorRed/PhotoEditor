@@ -1,4 +1,4 @@
-import { paths, tool } from "../../api";
+import { paths, tool } from "../../../api";
 
 export class cropTool extends tool {
   public toolName = 'Crop'

@@ -1,10 +1,9 @@
 import { ipcRenderer, remote } from 'electron'
 import { image } from './image';
-import { canvas, tool } from '../api'
+import { canvas, tool, panel } from '../api'
 import * as glob from 'glob'
 import * as path from 'path'
-import { addons, addon, addonType } from './plugin';
-import { plugin, pluginGroup } from './plugin/plugin';
+import { addons, addon, addonType, plugin, pluginGroup } from '../api';
 document.addEventListener('DOMContentLoaded', e => {
   let mainCanvas = document.querySelector('canvas#primary') as HTMLCanvasElement
   let canvasBg = document.querySelector('canvas#bg') as HTMLCanvasElement
@@ -20,6 +19,7 @@ document.addEventListener('DOMContentLoaded', e => {
         try {
           let p = new item(pg.id)
           p instanceof tool && p.init()
+          p instanceof panel && p.init()
           pg.add(p)
         } catch (e) { console.error(e.message) }
       }

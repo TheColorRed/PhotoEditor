@@ -1,7 +1,11 @@
 import * as path from 'path'
 
-export { canvas } from '../client/plugin/canvas'
-export { tool } from '../client/plugin/tool'
+export { plugin, pluginGroup } from './plugin/plugin'
+export { canvas } from './plugin/canvas'
+export { tool } from './plugin/tool'
+export { panel } from './plugin/panel'
+
+export { addon, addons, addonType } from './plugin'
 
 export const paths = {
   images: path.join(__dirname, '../../', 'assets/images').replace(/\\/g, '/'),

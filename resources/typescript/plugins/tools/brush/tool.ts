@@ -1,4 +1,4 @@
-import { paths, tool } from '../../api'
+import { paths, tool } from '../../../api'
 
 export class brushTool extends tool {
   public toolName = 'Brush'

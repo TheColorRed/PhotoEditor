@@ -1,0 +1,48 @@
+.panels {
+  & > .panel {
+    min-height: 1rem;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+
+    & > div {
+      position: relative;
+      display: flex;
+
+      & .selected-colors {
+        min-width: 85px;
+        max-width: 85px;
+        width: 85px;
+      }
+
+      &.picker {
+        display: flex;
+        flex-direction: row;
+      }
+
+      & .row {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .color {
+        width: 50px;
+        height: 50px;
+        position: absolute;
+        cursor: pointer;
+
+        &.fg {
+          background: #000;
+          z-index: 101;
+        }
+
+        &.bg {
+          background: #fff;
+          top: 25px;
+          left: 25px;
+          z-index: 100;
+        }
+      }
+    }
+  }
+}

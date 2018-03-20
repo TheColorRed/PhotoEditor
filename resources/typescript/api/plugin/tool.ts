@@ -1,5 +1,5 @@
 import { plugin } from "./plugin";
-import { image } from "../image";
+import { image } from "../../client/image";
 
 export interface toolSetting {
   label: string
