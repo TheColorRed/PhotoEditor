@@ -63,10 +63,9 @@ export abstract class tool extends plugin {
       let options = document.querySelector('.options') as HTMLDivElement
       options.innerHTML = ''
       this.settings.forEach(setting => {
-        console.log(setting)
         if (setting.type == 'units') {
           let item = document.createElement('div')
-          item.classList.add('units')
+          item.classList.add('units', 'option')
           let label = document.createElement('label')
           label.textContent = setting.label + ':' || ''
           let txt = document.createElement('input')
@@ -80,7 +79,10 @@ export abstract class tool extends plugin {
             e.preventDefault()
             let target = e.currentTarget
             if (target instanceof HTMLInputElement) setting.current = target.value
-            this.getGroup().plugins.forEach(p => typeof p.onSettingChanged == 'function' && p.onSettingChanged(setting.key))
+            this.getGroup().plugins.forEach(p => {
+              typeof p.onSettingChanged == 'function' && p.onSettingChanged(setting.key)
+              p instanceof canvas && p.onTool()
+            })
           })
         }
       })

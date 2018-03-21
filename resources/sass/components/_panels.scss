@@ -15,9 +15,13 @@
         width: 85px;
       }
 
-      &.picker {
+      & .picker {
         display: flex;
         flex-direction: row;
+
+        & > canvas:first-child {
+          margin-right: 10px;
+        }
       }
 
       & .row {
@@ -32,12 +36,10 @@
         cursor: pointer;
 
         &.fg {
-          background: #000;
           z-index: 101;
         }
 
         &.bg {
-          background: #fff;
           top: 25px;
           left: 25px;
           z-index: 100;

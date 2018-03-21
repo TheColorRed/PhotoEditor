@@ -2,22 +2,45 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 50px;
-  background: #222;
+  height: $options-height;
+  background: #535353;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
   z-index: 101;
   color: #fff;
+  font-size: 0.6rem;
+  padding: 10px;
 
-  & > div {
+  & > .option {
     margin-right: 10px;
-  }
 
-  input[type=text] {
-    outline: none;
-    padding: 2px 5px;
+    :first-child {
+      margin-right: 10px;
+    }
 
-    &.units {
-      width: 50px;
+    &:not(:last-child):after {
+      border-right: solid 2px #444444;
+      content: '';
+      margin-left: 10px;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      padding-right: 0;
+      height: calc(#{$options-height} - 4px);
+    }
+
+    input[type=text] {
+      outline: none;
+      padding: 4px 8px;
+      font-size: 0.6rem;
+      border-radius: 3px;
+      border: solid 1px #6e6e6e;
+      background: #444444;
+      color: #eee;
+      letter-spacing: 1px;
+      text-align: center;
+
+      &.units {
+        width: 50px;
+      }
     }
   }
 }

@@ -1,5 +1,11 @@
+@import './variables';
+
 * {
   box-sizing: border-box;
+}
+
+:root {
+  font-size: 20px;
 }
 
 body {
@@ -16,7 +22,7 @@ body {
     .workspace {
       display: flex;
       flex-direction: row;
-      height: calc(100vh - 50px);
+      height: calc(100vh - #{$options-height});
 
       .workarea {
         display: flex;

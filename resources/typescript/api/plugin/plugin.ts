@@ -38,4 +38,10 @@ export abstract class plugin {
   public getGroup() {
     return plugin.plugins.find(p => p.id == this.groupid) as pluginGroup
   }
+
+  public static broadcast(event: string, ...args: any[]) {
+    this.plugins.forEach(pg => {
+      pg.plugins.forEach((p: { [key: string]: any }) => typeof p[event] == 'function' && p[event](...args))
+    })
+  }
 }

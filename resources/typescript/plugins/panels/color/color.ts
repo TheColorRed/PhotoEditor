@@ -1,4 +1,4 @@
-import { panel, canvas } from '../../../api'
+import { panel, canvas, color } from '../../../api'
 import { colorPicker } from './canvas/colorPicker';
 import { huePicker } from './canvas/huePicker';
 export class colorPanel extends panel {
@@ -8,8 +8,8 @@ export class colorPanel extends panel {
     colorPallet.innerHTML = `
       <div class="row">
         <div class="selected-colors">
-          <div class="color fg"></div>
-          <div class="color bg"></div>
+          <div class="color fg" style="background:${color.current.fg}"></div>
+          <div class="color bg" style="background:${color.current.bg}"></div>
         </div>
         <div class="picker">
           <canvas></canvas>
@@ -20,11 +20,21 @@ export class colorPanel extends panel {
     return colorPallet
   }
 
+  public foregroundColor(value: string) {
+    let div = this.panel.querySelector('.color.fg') as HTMLDivElement
+    if (div) div.style.background = value
+  }
+
+  public backgroundColor(value: string) {
+    let div = this.panel.querySelector('.color.bg') as HTMLDivElement
+    if (div) div.style.background = value
+  }
+
   public postRender() {
     let cp = new colorPicker(this)
-    let hp = new huePicker(this)
-    cp.drawColorPicker('#0f0')
-    hp.drawHuePicker('#0f0')
+    let hp = new huePicker(this, cp)
+    cp.drawColorPicker()
+    hp.drawHuePicker()
   }
 
 }

@@ -19,12 +19,12 @@ export class brushCanvas extends canvas {
   public mousedown(e: MouseEvent) {
     if (!this.onCanvas || e.button != 0) return
     this.isDrawing = true
-    this.draftCtx.lineWidth = this.lineWidth
-    this.draftCtx.lineJoin = this.draftCtx.lineCap = 'round'
-    this.draftCtx.shadowBlur = 10
-    this.draftCtx.shadowColor = e.ctrlKey ? color.current.bg : color.current.fg
-    this.draftCtx.strokeStyle = e.ctrlKey ? color.current.bg : color.current.fg
-    this.draftCtx.fillStyle = e.ctrlKey ? color.current.bg : color.current.fg
+    this.draftCTX.lineWidth = this.lineWidth
+    this.draftCTX.lineJoin = this.draftCTX.lineCap = 'round'
+    this.draftCTX.shadowBlur = 10
+    this.draftCTX.shadowColor = e.ctrlKey ? color.current.bg : color.current.fg
+    this.draftCTX.strokeStyle = e.ctrlKey ? color.current.bg : color.current.fg
+    this.draftCTX.fillStyle = e.ctrlKey ? color.current.bg : color.current.fg
     this.draft.style.opacity = this.opacity.toString()
     this.primaryCTX.globalAlpha = this.opacity
     this.lastPoint = { x: this.mouse.x, y: this.mouse.y }
@@ -44,10 +44,10 @@ export class brushCanvas extends canvas {
   }
 
   private draw(currentPoint: point) {
-    this.draftCtx.beginPath()
-    this.draftCtx.moveTo(this.lastPoint.x, this.lastPoint.y)
-    this.draftCtx.lineTo(currentPoint.x, currentPoint.y)
-    this.draftCtx.stroke()
+    this.draftCTX.beginPath()
+    this.draftCTX.moveTo(this.lastPoint.x, this.lastPoint.y)
+    this.draftCTX.lineTo(currentPoint.x, currentPoint.y)
+    this.draftCTX.stroke()
   }
 
   public cursor() {

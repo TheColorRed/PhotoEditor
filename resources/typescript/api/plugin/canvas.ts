@@ -9,13 +9,16 @@ export interface canvas {
   mouseleave(event: MouseEvent): void
 }
 
+export enum button { none = -1, left = 0, middle = 1, right = 2 }
+
 export abstract class canvas extends plugin {
   protected primaryCanvas: HTMLCanvasElement
   protected primaryCTX: CanvasRenderingContext2D
   protected draft: HTMLCanvasElement
-  protected draftCtx: CanvasRenderingContext2D
+  protected draftCTX: CanvasRenderingContext2D
   protected rect: ClientRect = document.body.getBoundingClientRect()
   protected mouse: { x: number, y: number } = { x: 0, y: 0 }
+  protected button: button = button.none
   protected onCanvas: boolean = false
 
   protected get width() { return this.primaryCanvas.width }
@@ -34,28 +37,36 @@ export abstract class canvas extends plugin {
     this.primaryCTX = this.primaryCanvas.getContext('2d') as CanvasRenderingContext2D
     this.rect = this.primaryCanvas.getBoundingClientRect()
     this.draft = document.querySelector('canvas#draft') as HTMLCanvasElement
-    this.draftCtx = this.draft.getContext('2d') as CanvasRenderingContext2D
+    this.draftCTX = this.draft.getContext('2d') as CanvasRenderingContext2D
 
-    window.addEventListener('mousedown', this.onMouseDown.bind(this))
+    this.primaryCTX.save()
+    this.draftCTX.save()
+
     window.addEventListener('mousemove', this.onMouseMove.bind(this))
     window.addEventListener('mouseup', this.onMouseUp.bind(this))
+    this.primaryCanvas.addEventListener('mousedown', this.onMouseDown.bind(this))
     this.primaryCanvas.addEventListener('mouseenter', this.onMouseEnter.bind(this))
     this.primaryCanvas.addEventListener('mouseleave', this.onMouseLeave.bind(this))
   }
 
   protected apply() {
     this.primaryCTX.drawImage(this.draft, 0, 0)
-    this.draftCtx.clearRect(0, 0, this.width, this.height)
+    this.draftCTX.clearRect(0, 0, this.width, this.height)
   }
 
   public onTool() {
     let group = this.getGroup()
     let currentToolGroup = tool.activeTool && tool.activeTool.getGroup()
-    if (group == currentToolGroup) this.primaryCanvas.style.cursor = this.cursor()
-    else this.primaryCanvas.style.cursor = 'default'
+    if (group == currentToolGroup) this.updateCursor()
+  }
+
+  private updateCursor() {
+    this.primaryCanvas.style.cursor = this.cursor()
   }
 
   private onMouseDown(e: MouseEvent) {
+    this.button = e.button
+    this.rect = this.primaryCanvas.getBoundingClientRect()
     let group = this.getGroup()
     let currentToolGroup = tool.activeTool && tool.activeTool.getGroup()
     group == currentToolGroup && typeof this.mousedown == 'function' && this.mousedown(e)
@@ -70,7 +81,9 @@ export abstract class canvas extends plugin {
   }
 
   private onMouseUp(e: MouseEvent) {
+    this.button = button.none
     let group = this.getGroup()
+    this.primaryCTX.globalCompositeOperation = 'source-over'
     let currentToolGroup = tool.activeTool && tool.activeTool.getGroup()
     group == currentToolGroup && typeof this.mouseup == 'function' && this.mouseup(e)
   }

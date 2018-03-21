@@ -2,7 +2,7 @@ import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
 import * as path from 'path'
 import * as glob from 'glob'
 // import { plugin } from './core';
-const reload = require('electron-reload')
+require('electron-reload')(path.join(__dirname, '../../'))
 
 const root = path.join(__dirname, '../../')
 const locals = {
@@ -25,7 +25,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
   app.quit()
 } else {
   // Reload the app if anything changes
-  reload(root + '**/*')
+  // reload(root + '**/*')
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.

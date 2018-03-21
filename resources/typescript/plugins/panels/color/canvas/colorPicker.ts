@@ -7,6 +7,11 @@ export class colorPicker {
   private pickerRect: ClientRect
   private panel: colorPanel
   private selecting: boolean = false
+  private hue = 0
+
+  private cursorX = 0
+  private cursorY = 0
+  private button = 0
 
   public constructor(panel: colorPanel) {
     this.panel = panel
@@ -14,19 +19,28 @@ export class colorPicker {
     this.pickerRect = this.colorPicker.getBoundingClientRect()
   }
 
-  public drawColorPicker(hue: string) {
+  public setHue(h: number) {
+    this.hue = h / 360
+  }
+
+  public drawColorPicker() {
     let rect = this.panel.panel.getBoundingClientRect()
     this.colorPicker.width = rect.width - 140
     this.colorPicker.height = rect.width - 140
-    this.redrawPicker(this.colorPicker, 0, 0, hue)
+    this.redrawPicker()
+    this.redrawCursor()
     window.addEventListener('mouseup', e => { this.selecting = false })
     this.colorPicker.addEventListener('mousedown', (e: MouseEvent) => {
       if (!this.colorPicker) return
       this.selecting = true
-      this.pickerRect = this.colorPicker.getBoundingClientRect()
       let mouse = this.mousePosition(e)
-      this.setColor(e.button, this.colorPicker.width, this.colorPicker.height, mouse.x, mouse.y, 120)
-      this.redrawPicker(this.colorPicker, mouse.x, mouse.y, hue)
+      this.cursorX = mouse.x
+      this.cursorY = mouse.y
+      this.button = e.button
+      this.pickerRect = this.colorPicker.getBoundingClientRect()
+      this.setColor()
+      this.redrawPicker()
+      this.redrawCursor()
     })
     window.addEventListener('mousemove', e => {
       if (!this.colorPicker) return
@@ -37,8 +51,11 @@ export class colorPicker {
       if (y < 0) y = 0
       if (x > this.colorPicker.width) x = this.colorPicker.width
       if (y > this.colorPicker.height) y = this.colorPicker.height
-      this.setColor(e.button, this.colorPicker.width, this.colorPicker.height, x, y, 120)
-      this.redrawPicker(this.colorPicker, x, y, hue)
+      this.cursorX = x
+      this.cursorY = y
+      this.setColor()
+      this.redrawPicker()
+      this.redrawCursor()
     })
     this.colorPicker.addEventListener('mouseleave', (e: MouseEvent) => {
       if (!this.selecting) return
@@ -48,38 +65,45 @@ export class colorPicker {
     })
   }
 
-  private setColor(button: number, width: number, height: number, x: number, y: number, h: number) {
-    h = h / 360
-    let s = x / width
-    let v = (height - y) / height
-    let hex = color.hsvToHex(h, s, v)
-    if (button == 0) color.current.fg = hex
-    if (button == 2) color.current.bg = hex
+  private setColor() {
+    let s = this.cursorX / this.colorPicker.width
+    let v = (this.colorPicker.height - this.cursorY) / this.colorPicker.height
+    let hex = color.hsvToHex(this.hue, s, v)
+    if (this.button == 0) color.current.fg = hex
+    if (this.button == 2) color.current.bg = hex
   }
 
-  private redrawPicker(colorPicker: HTMLCanvasElement, x: number, y: number, hue: string) {
-    let ctx = colorPicker.getContext('2d')
+  public redrawPicker(button: number = 0) {
+    if ([0, 1].indexOf(button) > -1) this.button = button
+    let ctx = this.colorPicker.getContext('2d')
     if (!ctx) return
-    ctx.clearRect(0, 0, colorPicker.width, colorPicker.height)
-    let hgrad = ctx.createLinearGradient(0, 0, colorPicker.width, 0)
+    ctx.clearRect(0, 0, this.colorPicker.width, this.colorPicker.height)
+    let hgrad = ctx.createLinearGradient(0, 0, this.colorPicker.width, 0)
     hgrad.addColorStop(0, '#ffffff')
-    hgrad.addColorStop(1, hue)
+    hgrad.addColorStop(1, color.hsvToHex(this.hue, 1, 1))
     ctx.fillStyle = hgrad
-    ctx.fillRect(0, 0, colorPicker.width, colorPicker.height)
+    ctx.fillRect(0, 0, this.colorPicker.width, this.colorPicker.height)
 
-    let vgrad = ctx.createLinearGradient(0, 0, 0, colorPicker.width)
+    let vgrad = ctx.createLinearGradient(0, 0, 0, this.colorPicker.width)
     vgrad.addColorStop(0, 'rgba(0,0,0,0)')
     vgrad.addColorStop(1, 'rgba(0,0,0,1)')
     ctx.fillStyle = vgrad
-    ctx.fillRect(0, 0, colorPicker.width, colorPicker.height)
+    ctx.fillRect(0, 0, this.colorPicker.width, this.colorPicker.height)
+    this.redrawCursor()
+  }
+
+  public redrawCursor() {
+    let ctx = this.colorPicker.getContext('2d')
+    if (!ctx) return
     ctx.beginPath()
     ctx.strokeStyle = '#000'
-    ctx.arc(x, y, 6, 0, 2 * Math.PI)
+    ctx.arc(this.cursorX, this.cursorY, 6, 0, 2 * Math.PI)
     ctx.stroke()
     ctx.beginPath()
     ctx.strokeStyle = '#fff'
-    ctx.arc(x, y, 8, 0, 2 * Math.PI)
+    ctx.arc(this.cursorX, this.cursorY, 8, 0, 2 * Math.PI)
     ctx.stroke()
+    this.setColor()
   }
 
   private mousePosition(e: MouseEvent) {
