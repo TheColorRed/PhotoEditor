@@ -17,8 +17,8 @@ export class huePicker {
     this.cp = cp
     this.huePicker = this.panel.panel.querySelector('.picker > canvas:last-child') as HTMLCanvasElement
     this.hueRect = this.huePicker.getBoundingClientRect()
-    color.current.fg = '#fff'
-    color.current.bg = '#000'
+    color.current.fg = color.white
+    color.current.bg = color.black
   }
 
   public drawHuePicker() {
@@ -64,8 +64,9 @@ export class huePicker {
 
   private setHue() {
     let p = (this.huePicker.height - this.mouse.y) / this.huePicker.height
-    this.cp.setHue(p * 360)
+    this.cp.setHue(p * 360 / 360)
     this.cp.redrawPicker(this.button)
+    this.cp.setColor()
   }
 
   private redrawHuePicker() {

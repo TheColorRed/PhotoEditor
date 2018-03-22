@@ -8,17 +8,24 @@ export class color {
   public readonly b: number = 0
   public readonly a: number = 255
 
-  public static readonly current = new Proxy({ fg: '#fff', bg: '#000' }, {
-    set: (target, key, value) => {
-      if (key == 'fg') {
+  public static get white() { return new color(255, 255, 255) }
+  public static get black() { return new color(0, 0, 0) }
+
+  public static readonly current = new Proxy({ fg: color.white, bg: color.black }, {
+    set: (target: { [key: string]: color }, property, value) => {
+      let prop = property.toString()
+      let oldValue = target[prop]
+      Reflect.set(target, property, value)
+      if (value == oldValue) return true
+      if (property == 'fg') {
         plugin.broadcast('foregroundColor', value)
       }
-      if (key == 'bg') {
+      if (property == 'bg') {
         plugin.broadcast('backgroundColor', value)
       }
-      return Reflect.set(target, key, value)
+      return true
     },
-    get: (target, key) => Reflect.get(target, key)
+    get: (target, key): color => Reflect.get(target, key) as color
   })
 
   public constructor(r: number, g: number, b: number, a: number = 1) {
@@ -38,11 +45,16 @@ export class color {
   }
 
   public setForeground() {
-    color.current.fg = this.toHex()
+    color.current.fg = this
   }
 
   public setBackground() {
-    color.current.bg = this.toHex()
+    color.current.bg = this
+  }
+
+  public static fromHsv(h: number, s: number, v: number) {
+    let rgb = color.hsvToRgb(h, s, v)
+    return new color(rgb.r, rgb.g, rgb.b)
   }
 
   public static hsvToHex(h: number, s: number, v: number) {
@@ -75,7 +87,7 @@ export class color {
       case 5: r = v, g = p, b = q; break
     }
 
-    return { r: r * 255, g: g * 255, b: b * 255 }
+    return new color(r * 255, g * 255, b * 255)
   }
 
   public static rgbToHsv(r: number, g: number, b: number) {
@@ -101,4 +113,21 @@ export class color {
 
     return { h, s, v }
   }
+
+  public static hexToRgb(hex: string) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+      return r + r + g + g + b + b;
+    })
+
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) as string[]
+    return new color(parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16))
+    // return result ? {
+    //   r: parseInt(result[1], 16),
+    //   g: parseInt(result[2], 16),
+    //   b: parseInt(result[3], 16)
+    // } : null;
+  }
+
 }

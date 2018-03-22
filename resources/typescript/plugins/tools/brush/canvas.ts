@@ -22,9 +22,9 @@ export class brushCanvas extends canvas {
     this.draftCTX.lineWidth = this.lineWidth
     this.draftCTX.lineJoin = this.draftCTX.lineCap = 'round'
     this.draftCTX.shadowBlur = 10
-    this.draftCTX.shadowColor = e.ctrlKey ? color.current.bg : color.current.fg
-    this.draftCTX.strokeStyle = e.ctrlKey ? color.current.bg : color.current.fg
-    this.draftCTX.fillStyle = e.ctrlKey ? color.current.bg : color.current.fg
+    this.draftCTX.shadowColor = e.ctrlKey ? color.current.bg.toHex() : color.current.fg.toHex()
+    this.draftCTX.strokeStyle = e.ctrlKey ? color.current.bg.toHex() : color.current.fg.toHex()
+    this.draftCTX.fillStyle = e.ctrlKey ? color.current.bg.toHex() : color.current.fg.toHex()
     this.draft.style.opacity = this.opacity.toString()
     this.primaryCTX.globalAlpha = this.opacity
     this.lastPoint = { x: this.mouse.x, y: this.mouse.y }

@@ -19,8 +19,13 @@ export class colorPicker {
     this.pickerRect = this.colorPicker.getBoundingClientRect()
   }
 
+  public backgroundColor(value: string) {
+    let div = this.panel.panel.querySelector('.color.bg') as HTMLDivElement
+    if (div) div.style.background = value
+  }
+
   public setHue(h: number) {
-    this.hue = h / 360
+    this.hue = h
   }
 
   public drawColorPicker() {
@@ -38,9 +43,9 @@ export class colorPicker {
       this.cursorY = mouse.y
       this.button = e.button
       this.pickerRect = this.colorPicker.getBoundingClientRect()
-      this.setColor()
       this.redrawPicker()
       this.redrawCursor()
+      this.setColor()
     })
     window.addEventListener('mousemove', e => {
       if (!this.colorPicker) return
@@ -53,9 +58,9 @@ export class colorPicker {
       if (y > this.colorPicker.height) y = this.colorPicker.height
       this.cursorX = x
       this.cursorY = y
-      this.setColor()
       this.redrawPicker()
       this.redrawCursor()
+      this.setColor()
     })
     this.colorPicker.addEventListener('mouseleave', (e: MouseEvent) => {
       if (!this.selecting) return
@@ -65,12 +70,16 @@ export class colorPicker {
     })
   }
 
-  private setColor() {
+  public setColor() {
     let s = this.cursorX / this.colorPicker.width
     let v = (this.colorPicker.height - this.cursorY) / this.colorPicker.height
     let hex = color.hsvToHex(this.hue, s, v)
-    if (this.button == 0) color.current.fg = hex
-    if (this.button == 2) color.current.bg = hex
+    if (this.button == 0) color.current.fg = color.fromHsv(this.hue, s, v)
+    if (this.button == 2) color.current.bg = color.fromHsv(this.hue, s, v)
+  }
+
+  public setCursor(x: number, y: number) {
+    this.cursorX = x, this.cursorY = y
   }
 
   public redrawPicker(button: number = 0) {
@@ -103,7 +112,6 @@ export class colorPicker {
     ctx.strokeStyle = '#fff'
     ctx.arc(this.cursorX, this.cursorY, 8, 0, 2 * Math.PI)
     ctx.stroke()
-    this.setColor()
   }
 
   private mousePosition(e: MouseEvent) {
