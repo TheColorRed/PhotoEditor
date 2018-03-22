@@ -3,6 +3,9 @@ import { colorPicker } from './canvas/colorPicker';
 import { huePicker } from './canvas/huePicker';
 export class colorPanel extends panel {
 
+  protected key: string = 'colors'
+  protected label: string = 'Colors'
+  public panelGroup: number = 0
   protected cp?: colorPicker
   protected hp?: huePicker
   protected fg?: HTMLDivElement
@@ -25,16 +28,12 @@ export class colorPanel extends panel {
     return colorPallet
   }
 
-  public foregroundColor(value: color) {
+  public onForegroundColor(value: color) {
     if (this.fg) this.fg.style.background = value.toHex()
-    if (!this.cp) return
-    let hsv = value.toHsv()
-    this.cp.setHue(hsv.h)
-    this.cp.redrawPicker()
   }
 
-  public backgroundColor(value: string) {
-    if (this.bg) this.bg.style.background = value
+  public onBackgroundColor(value: color) {
+    if (this.bg) this.bg.style.background = value.toHex()
   }
 
   public postRender() {
@@ -44,6 +43,8 @@ export class colorPanel extends panel {
     this.hp.drawHuePicker()
     this.fg = this.panel.querySelector('.color.fg') as HTMLDivElement
     this.bg = this.panel.querySelector('.color.bg') as HTMLDivElement
+    this.onForegroundColor(color.current.fg)
+    this.onBackgroundColor(color.current.bg)
   }
 
 }

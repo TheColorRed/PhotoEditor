@@ -34,19 +34,19 @@ export class colorPicker {
     this.colorPicker.height = rect.width - 140
     this.redrawPicker()
     this.redrawCursor()
-    window.addEventListener('mouseup', e => { this.selecting = false })
     this.colorPicker.addEventListener('mousedown', (e: MouseEvent) => {
       if (!this.colorPicker) return
       this.selecting = true
+      this.pickerRect = this.colorPicker.getBoundingClientRect()
       let mouse = this.mousePosition(e)
       this.cursorX = mouse.x
       this.cursorY = mouse.y
       this.button = e.button
-      this.pickerRect = this.colorPicker.getBoundingClientRect()
       this.redrawPicker()
       this.redrawCursor()
       this.setColor()
     })
+    window.addEventListener('mouseup', e => { this.selecting = false })
     window.addEventListener('mousemove', e => {
       if (!this.colorPicker) return
       if (!this.selecting) return

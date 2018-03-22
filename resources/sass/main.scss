@@ -26,16 +26,26 @@ body {
 
       .workarea {
         display: flex;
-        background-color: #444;
+        background-color: $dark-color;
         height: inherit;
         flex-grow: 1;
         align-items: center;
         justify-content: center;
+        z-index: 99;
+        overflow: auto;
+        position: relative;
+
+        .primary {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
       }
 
       .panels {
-        width: 300px;
-        background: #333;
+        min-width: 300px;
+        max-width: 300px;
+        background: $secondary-color;
         height: inherit;
         box-shadow: -2px 0 2px rgba(0, 0, 0, 0.5);
         z-index: 100;

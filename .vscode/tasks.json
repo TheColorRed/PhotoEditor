@@ -12,6 +12,16 @@
       "problemMatcher": [
         "$gulp-tsc"
       ]
+    },
+    {
+      "group": "none",
+      "label": "Clean",
+      "type": "shell",
+      "command": "gulp",
+      "args": [
+        "clean"
+      ],
+      "problemMatcher": []
     }
   ]
 }

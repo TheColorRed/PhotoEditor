@@ -4,6 +4,7 @@ import { canvas, tool, panel } from '../api'
 import * as glob from 'glob'
 import * as path from 'path'
 import { addons, addon, addonType, plugin, pluginGroup } from '../api';
+import { clientPanels } from '../api/util/panels';
 document.addEventListener('DOMContentLoaded', e => {
   let mainCanvas = document.querySelector('canvas#primary') as HTMLCanvasElement
   let canvasBg = document.querySelector('canvas#bg') as HTMLCanvasElement
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', e => {
       }
       pg.loaded()
     })
+    clientPanels.init()
   })
 
   function drawBG() {

@@ -27,7 +27,6 @@ export class huePicker {
     this.huePicker.height = rect.width - 140
     this.redrawHuePicker()
 
-    window.addEventListener('mouseup', e => { this.selecting = false })
     this.huePicker.addEventListener('mousedown', (e: MouseEvent) => {
       if (!this.huePicker) return
       this.selecting = true
@@ -36,8 +35,10 @@ export class huePicker {
       this.mousePosition(e)
       this.setHue()
       this.redrawHuePicker()
+      // this.cp.setColor()
     })
 
+    window.addEventListener('mouseup', e => { this.selecting = false })
     window.addEventListener('mousemove', e => {
       if (!this.huePicker) return
       if (!this.selecting) return
@@ -51,6 +52,7 @@ export class huePicker {
       this.mouse.y = y
       this.setHue()
       this.redrawHuePicker()
+      // this.cp.setColor()
     })
 
     this.huePicker.addEventListener('mouseleave', (e: MouseEvent) => {
@@ -62,11 +64,15 @@ export class huePicker {
     })
   }
 
-  private setHue() {
-    let p = (this.huePicker.height - this.mouse.y) / this.huePicker.height
-    this.cp.setHue(p * 360 / 360)
+  public setHue(color?: color) {
+    // if (color) {
+    //   this.mouse.y = color.h * this.huePicker.height
+    //   console.log(color.h, this.mouse.y)
+    //   this.redrawHuePicker()
+    // }
+    let h = (this.huePicker.height - this.mouse.y) / this.huePicker.height
+    this.cp.setHue(h * 360 / 360)
     this.cp.redrawPicker(this.button)
-    this.cp.setColor()
   }
 
   private redrawHuePicker() {

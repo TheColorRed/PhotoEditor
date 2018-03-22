@@ -44,3 +44,10 @@ gulp.task('build', ['typescript', 'sass', 'copy pug', 'copy assets'], () => {
   gulp.watch('./resources/assets/**/*', ['copy assets'])
   gulp.watch('./resources/sass/**/*.scss', ['sass'])
 })
+
+gulp.task('clean', () => {
+  rimraf('./app', (err) => {
+    if (err) return console.error(err)
+    gulp.start(['typescript', 'sass', 'copy pug', 'copy assets'])
+  })
+})

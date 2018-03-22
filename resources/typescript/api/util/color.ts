@@ -8,20 +8,24 @@ export class color {
   public readonly b: number = 0
   public readonly a: number = 255
 
+  public readonly h: number = 0
+  public readonly s: number = 0
+  public readonly v: number = 0
+
   public static get white() { return new color(255, 255, 255) }
   public static get black() { return new color(0, 0, 0) }
 
   public static readonly current = new Proxy({ fg: color.white, bg: color.black }, {
-    set: (target: { [key: string]: color }, property, value) => {
+    set: (target: { [key: string]: color }, property, value, a) => {
       let prop = property.toString()
       let oldValue = target[prop]
       Reflect.set(target, property, value)
       if (value == oldValue) return true
       if (property == 'fg') {
-        plugin.broadcast('foregroundColor', value)
+        plugin.broadcast('onForegroundColor', value)
       }
       if (property == 'bg') {
-        plugin.broadcast('backgroundColor', value)
+        plugin.broadcast('onBackgroundColor', value)
       }
       return true
     },
@@ -30,6 +34,8 @@ export class color {
 
   public constructor(r: number, g: number, b: number, a: number = 1) {
     this.r = clamp(r, 0, 255), this.g = clamp(g, 0, 255), this.b = clamp(b, 0, 255), this.a = clamp(a, 0, 255)
+    let hsv = this.toHsv()
+    this.h = hsv.h, this.s = hsv.s, this.v = hsv.v
   }
 
   public toString() {

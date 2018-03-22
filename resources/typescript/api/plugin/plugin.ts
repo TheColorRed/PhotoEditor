@@ -1,6 +1,7 @@
 import { addons } from '.'
 import { tool } from './tool';
 import * as path from 'path'
+import { color } from '..';
 
 export class pluginGroup {
   public id: string
@@ -23,6 +24,8 @@ export class pluginGroup {
 export interface plugin {
   onSettingChanged(key: string): void
   ready(): void
+  onForegroundColor(color: color): void
+  onBackgroundColor(color: color): void
 }
 
 export abstract class plugin {

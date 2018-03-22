@@ -1,7 +1,8 @@
 .tools {
   height: inherit;
-  width: 40px;
-  background: #333;
+  min-width: 40px;
+  max-width: 40px;
+  background: $secondary-color;
   box-shadow: 2px 0 2px rgba(0, 0, 0, 0.5);
   z-index: 100;
   display: flex;
@@ -17,32 +18,30 @@
 
     & > .btn {
       display: flex;
-      // padding: 5px;
       border: solid 1px transparent;
       border-radius: 3px;
       color: #555;
       height: 100%;
-      // width: 100%;
-      // padding-top: 100%;
       position: absolute;
       top: 0;
       align-items: center;
       padding: 5px;
+      cursor: pointer;
 
       svg {
         width: 100%;
-        fill: #888;
+        fill: $font-color;
         max-height: 25px;
       }
     }
 
     & > .btn:hover,
     &.active > .btn {
-      background: #222;
-      border: solid 1px #555;
+      background: $primary-color;
+      border: solid 1px $border-color;
 
       & > svg {
-        fill: #ccc;
+        fill: $font-color;
         width: 100%;
       }
     }

@@ -1,48 +1,143 @@
 .panels {
-  & > .panel {
-    min-height: 1rem;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+  & > .panel-group {
+    padding: 4px;
+    padding-bottom: 0;
+    position: relative;
 
-    & > div {
-      position: relative;
+    & > .tab-list {
       display: flex;
+      flex-direction: row;
+      margin-top: 2px;
+      padding-bottom: 0;
+      min-height: 28px;
+      max-height: 28px;
 
-      & .selected-colors {
-        min-width: 85px;
-        max-width: 85px;
-        width: 85px;
-      }
-
-      & .picker {
-        display: flex;
-        flex-direction: row;
-
-        & > canvas:first-child {
-          margin-right: 10px;
-        }
-      }
-
-      & .row {
-        display: flex;
-        flex-direction: row;
-      }
-
-      .color {
-        width: 50px;
-        height: 50px;
-        position: absolute;
+      & > .tab {
+        color: $font-color;
+        font-size: 0.6rem;
+        padding: 5px 10px;
+        border: solid 1px $border-color;
         cursor: pointer;
 
-        &.fg {
-          z-index: 101;
+        &:not(:first-child) {
+          border-left: 0;
         }
 
-        &.bg {
-          top: 25px;
-          left: 25px;
-          z-index: 100;
+        &.active {
+          background-color: $primary-color;
+          border-bottom: $primary-color;
+        }
+
+        &.drag-hover {
+          background-color: lighten($primary-color, 10%);
+        }
+      }
+    }
+
+    & > .panel-list {
+      padding-top: 0;
+
+      & > .panel {
+        border: solid 1px $border-color;
+        border-top: 0;
+        background-color: $primary-color;
+        min-height: 1rem;
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+
+        &:not(.active) {
+          display: none;
+        }
+
+        & > .panel-content {
+          position: relative;
+          display: flex;
+
+          & .selected-colors {
+            min-width: 85px;
+            max-width: 85px;
+            width: 85px;
+          }
+
+          & .picker {
+            display: flex;
+            flex-direction: row;
+
+            & > canvas:first-child {
+              margin-right: 10px;
+            }
+          }
+
+          & .row {
+            display: flex;
+            flex-direction: row;
+          }
+
+          .color {
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            cursor: pointer;
+
+            &.fg {
+              z-index: 101;
+            }
+
+            &.bg {
+              top: 25px;
+              left: 25px;
+              z-index: 100;
+            }
+          }
+
+          &.layers {
+            & > .options {
+              display: flex;
+              flex-direction: row;
+
+              & > .option {
+                // padding: 5px;
+                text-align: center;
+                width: 30px;
+                height: 30px;
+                position: relative;
+
+                &:hover {
+                  background-color: $secondary-color;
+                }
+
+                & > .btn {
+                  display: flex;
+                  border: solid 1px transparent;
+                  border-radius: 3px;
+                  color: #555;
+                  height: 100%;
+                  top: 0;
+                  align-items: center;
+                  padding: 5px;
+                  cursor: pointer;
+
+                  & > svg {
+                    width: 100%;
+                    fill: $font-color;
+                    height: 25px;
+                  }
+                }
+
+                & > .btn:hover,
+                &.active > .btn {
+                  background: $secondary-color;
+                  border: solid 1px $border-color;
+
+                  & > svg {
+                    fill: $font-color;
+                    width: 100%;
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
