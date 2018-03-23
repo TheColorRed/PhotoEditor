@@ -13,6 +13,7 @@ export enum button { none = -1, left = 0, middle = 1, right = 2 }
 
 export abstract class canvas extends plugin {
   protected primaryCanvas: HTMLCanvasElement
+  protected workarea: HTMLElement
   protected primaryCTX: CanvasRenderingContext2D
   protected draft: HTMLCanvasElement
   protected draftCTX: CanvasRenderingContext2D
@@ -33,6 +34,7 @@ export abstract class canvas extends plugin {
 
   public constructor(groupid: string) {
     super(groupid)
+    this.workarea = document.querySelector('.workarea') as HTMLElement
     this.primaryCanvas = document.querySelector('canvas#primary') as HTMLCanvasElement
     this.primaryCTX = this.primaryCanvas.getContext('2d') as CanvasRenderingContext2D
     this.rect = this.primaryCanvas.getBoundingClientRect()
@@ -44,9 +46,9 @@ export abstract class canvas extends plugin {
 
     window.addEventListener('mousemove', this.onMouseMove.bind(this))
     window.addEventListener('mouseup', this.onMouseUp.bind(this))
-    this.primaryCanvas.addEventListener('mousedown', this.onMouseDown.bind(this))
-    this.primaryCanvas.addEventListener('mouseenter', this.onMouseEnter.bind(this))
-    this.primaryCanvas.addEventListener('mouseleave', this.onMouseLeave.bind(this))
+    this.workarea.addEventListener('mousedown', this.onMouseDown.bind(this))
+    this.workarea.addEventListener('mouseenter', this.onMouseEnter.bind(this))
+    this.workarea.addEventListener('mouseleave', this.onMouseLeave.bind(this))
   }
 
   protected apply() {
@@ -61,7 +63,7 @@ export abstract class canvas extends plugin {
   }
 
   private updateCursor() {
-    this.primaryCanvas.style.cursor = this.cursor()
+    this.workarea.style.cursor = this.cursor()
   }
 
   private onMouseDown(e: MouseEvent) {

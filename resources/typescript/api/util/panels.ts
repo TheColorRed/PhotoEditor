@@ -36,12 +36,14 @@ export class clientPanels {
       tabList.addEventListener('dragover', e => {
         e.preventDefault()
         e.stopPropagation()
+        tabList && tabList.classList.add('drag-hover')
       })
       tabList.addEventListener('drop', e => {
         e.preventDefault()
         e.stopPropagation()
         this.moveTab(e as DragEvent)
       })
+      tabList.addEventListener('dragleave', e => (e.currentTarget as HTMLElement).classList.remove('drag-hover'))
     }
     if (!panelList) {
       panelList = document.createElement('div')
@@ -99,7 +101,7 @@ export class clientPanels {
   }
 
   public static removeDragHover() {
-    Array.from(document.querySelectorAll('.panels .tab-list>.tab')).forEach(i => i.classList.remove('drag-hover'))
+    Array.from(document.querySelectorAll('.panels .tab-list>.tab,.panels .tab-list')).forEach(i => i.classList.remove('drag-hover'))
   }
 
   public static clearActive(group: Element) {

@@ -35,7 +35,7 @@ export class huePicker {
       this.mousePosition(e)
       this.setHue()
       this.redrawHuePicker()
-      // this.cp.setColor()
+      this.cp.setColor()
     })
 
     window.addEventListener('mouseup', e => { this.selecting = false })

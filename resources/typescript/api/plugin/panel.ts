@@ -47,7 +47,11 @@ export abstract class panel extends plugin {
       e.preventDefault()
       clientPanels.moveTab(e, e.currentTarget as Element)
     })
-    tab.addEventListener('dragover', e => (e.currentTarget as HTMLElement).classList.add('drag-hover'))
+    tab.addEventListener('dragover', e => {
+      e.stopPropagation()
+      e.preventDefault();
+      (e.currentTarget as HTMLElement).classList.add('drag-hover')
+    })
     tab.addEventListener('dragleave', e => (e.currentTarget as HTMLElement).classList.remove('drag-hover'))
     let panelContent = this.render()
     if (panelContent instanceof Element) {
