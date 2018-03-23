@@ -27,7 +27,14 @@
       height: calc(#{$options-height} - 4px);
     }
 
+    input[type=number],
     input[type=text] {
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        /* display: none; <- Crashes Chrome on hover */
+        -webkit-appearance: none;
+        margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+      }
       outline: none;
       padding: 4px 8px;
       font-size: 0.6rem;

@@ -1,6 +1,7 @@
 import { plugin } from "./plugin";
 import { image } from "../../client/image";
 import { canvas } from "..";
+import { clamp } from "../util/number";
 
 export interface toolSetting {
   label: string
@@ -71,13 +72,17 @@ export abstract class tool extends plugin {
           let txt = document.createElement('input')
           txt.classList.add('units')
           txt.value = (setting.current || setting.default).toString()
-          txt.type = 'text'
+          txt.type = 'number'
+          if (setting.max) txt.max = setting.max.toString()
+          if (setting.min) txt.min = setting.min.toString()
           item.appendChild(label)
           item.appendChild(txt)
           options.appendChild(item)
-          txt.addEventListener('input', e => {
+          txt.addEventListener('keyup', e => {
             e.preventDefault()
-            let target = e.currentTarget
+            let target = e.currentTarget as HTMLInputElement
+            if (setting.max && setting.min)
+              txt.value = clamp(parseInt(target.value), setting.min, setting.max).toString()
             if (target instanceof HTMLInputElement) setting.current = target.value
             this.getGroup().plugins.forEach(p => {
               typeof p.onSettingChanged == 'function' && p.onSettingChanged(setting.key)

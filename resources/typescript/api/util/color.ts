@@ -6,11 +6,14 @@ export class color {
   public readonly r: number = 0
   public readonly g: number = 0
   public readonly b: number = 0
-  public readonly a: number = 255
+  private _a: number = 255
 
   public readonly h: number = 0
   public readonly s: number = 0
   public readonly v: number = 0
+
+  public get a() { return this._a }
+  public set a(value: number) { this._a = clamp(value, 0, 255) }
 
   public static get white() { return new color(255, 255, 255) }
   public static get black() { return new color(0, 0, 0) }
@@ -33,13 +36,21 @@ export class color {
   })
 
   public constructor(r: number, g: number, b: number, a: number = 1) {
-    this.r = clamp(r, 0, 255), this.g = clamp(g, 0, 255), this.b = clamp(b, 0, 255), this.a = clamp(a, 0, 255)
+    this.r = parseInt(clamp(r, 0, 255).toString()),
+      this.g = parseInt(clamp(g, 0, 255).toString()),
+      this.b = parseInt(clamp(b, 0, 255).toString()),
+      this._a = parseInt(clamp(a, 0, 255).toString())
     let hsv = this.toHsv()
     this.h = hsv.h, this.s = hsv.s, this.v = hsv.v
   }
 
+  public setAlpha(alpha: number) {
+    this.a = alpha
+    return this
+  }
+
   public toString() {
-    return `rgba(${this.r},${this.g},${this.b},${normalize01(this.a)})`
+    return `rgba(${this.r},${this.g},${this.b},${normalize01(this._a)})`
   }
 
   public toHex() {

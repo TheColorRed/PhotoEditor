@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, WebContents } from 'electron'
 import * as path from 'path'
 import * as glob from 'glob'
+import './menu'
 // import { plugin } from './core';
 require('electron-reload')(path.join(__dirname, '../../'))
 

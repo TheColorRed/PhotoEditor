@@ -6,10 +6,10 @@ export function clamp01(value: number) {
   return clamp(value, 0, 1)
 }
 
-export function normalize(value: number, max: number, min: number) {
+export function normalize(value: number, min: number, max: number) {
   return (value - min) / (max - min);
 }
 
 export function normalize01(value: number) {
-  return normalize(value, 0, 1)
+  return normalize(value, 0, 255)
 }
