@@ -78,24 +78,59 @@
             flex-direction: row;
           }
 
-          .color {
-            width: 50px;
-            height: 50px;
-            position: absolute;
-            cursor: pointer;
+          &.panel-colors {
+            .color {
+              width: 50px;
+              height: 50px;
+              position: absolute;
+              cursor: pointer;
 
-            &.fg {
-              z-index: 101;
-            }
+              &.fg {
+                z-index: 101;
+              }
 
-            &.bg {
-              top: 25px;
-              left: 25px;
-              z-index: 100;
+              &.bg {
+                top: 25px;
+                left: 25px;
+                z-index: 100;
+              }
             }
           }
 
-          &.layers {
+          &.panel-layers {
+            display: flex;
+            flex-direction: column;
+
+            & > .layers {
+              display: flex;
+              flex-direction: column;
+
+              & > .layer {
+                font-size: 0.6rem;
+                background: $trinary-color;
+                color: $font-color;
+                padding: 5px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                border: solid 1px $border-color;
+                border-bottom: 0;
+                cursor: pointer;
+
+                &:last-child {
+                  border: solid 1px $border-color;
+                }
+
+                &.active {
+                  background: $layer-selected;
+                }
+
+                & > canvas {
+                  margin-right: 5px;
+                }
+              }
+            }
+
             & > .options {
               display: flex;
               flex-direction: row;

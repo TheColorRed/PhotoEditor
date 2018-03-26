@@ -9,7 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "electron": "^1.8.3",
+        "electron": "^1.8.4",
         "electron-pug": "^1.5.1",
         "electron-reload": "^1.2.2",
         "electron-squirrel-startup": "^1.0.0",
@@ -22,10 +22,10 @@
         "asar": "^0.14.3",
         "electron-winstaller": "^2.6.4",
         "gulp": "^3.9.1",
-        "gulp-sass": "^3.1.0",
+        "gulp-sass": "^3.2.1",
         "gulp-sourcemaps": "^2.6.4",
         "gulp-typescript": "^4.0.1",
-        "node-sass": "^4.7.2",
+        "node-sass": "^4.8.3",
         "rimraf": "^2.6.2",
         "typescript": "^2.7.2",
         "watch": "^1.0.2"

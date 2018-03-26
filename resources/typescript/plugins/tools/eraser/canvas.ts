@@ -1,4 +1,5 @@
 import { canvas, point, color } from "../../../api";
+import { project } from "../../../api/util/project";
 
 export class eraserCanvas extends canvas {
   private lineWidth: number = 100
@@ -19,11 +20,13 @@ export class eraserCanvas extends canvas {
   public mousedown(e: MouseEvent) {
     if (!this.onCanvas || e.button != 0) return
     this.isErasing = true
-    this.primaryCTX.lineWidth = this.lineWidth
-    this.primaryCTX.lineJoin = this.primaryCTX.lineCap = 'round'
-    this.primaryCTX.globalCompositeOperation = 'destination-out'
-    this.primaryCTX.strokeStyle = 'rgba(0,0,0,1)'
-    this.primaryCTX.fillStyle = 'rgba(0,0,0,1)'
+    if (!project.active.layers.active) return
+    let ctx = project.active.layers.active.ctx
+    ctx.lineWidth = this.lineWidth
+    ctx.lineJoin = ctx.lineCap = 'round'
+    ctx.globalCompositeOperation = 'destination-out'
+    ctx.strokeStyle = 'rgba(0,0,0,1)'
+    ctx.fillStyle = 'rgba(0,0,0,1)'
     this.lastPoint = { x: this.mouse.x, y: this.mouse.y }
     this.erase(this.lastPoint)
   }
@@ -40,10 +43,14 @@ export class eraserCanvas extends canvas {
   }
 
   private erase(currentPoint: point) {
-    this.primaryCTX.beginPath()
-    this.primaryCTX.moveTo(this.lastPoint.x, this.lastPoint.y)
-    this.primaryCTX.lineTo(currentPoint.x, currentPoint.y)
-    this.primaryCTX.stroke()
+    project.active.toActiveLayer((ctx) => {
+      // let ctx = project.active.ctxPrimary
+      ctx.beginPath()
+      ctx.moveTo(this.lastPoint.x, this.lastPoint.y)
+      ctx.lineTo(currentPoint.x, currentPoint.y)
+      ctx.stroke()
+      project.active.updateMainCanvas()
+    })
   }
 
   public cursor() {

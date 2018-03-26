@@ -1,5 +1,6 @@
 import { canvas, color, point } from "../../../api"
 import { clamp } from "../../../api/util/number";
+import { project } from "../../../api/util/project";
 
 export class brushCanvas extends canvas {
   private lineWidth: number = 100
@@ -28,24 +29,14 @@ export class brushCanvas extends canvas {
     if (!this.onCanvas || e.button != 0) return
     this.isDrawing = true
     this.brush = this.createBrush(color.current.fg)
-    // let pattern = this.draftCTX.createPattern(brush, 'repeat')
-    // this.draftCTX.strokeStyle = pattern
-    // this.draftCTX.lineWidth = this.lineWidth
-    // this.draftCTX.lineJoin = this.draftCTX.lineCap = 'round'
-    // this.draftCTX.shadowBlur = 10
-    // this.draftCTX.shadowColor = e.ctrlKey ? color.current.bg.toHex() : color.current.fg.toHex()
-    // this.draftCTX.strokeStyle = e.ctrlKey ? color.current.bg.toHex() : color.current.fg.toHex()
-    // this.draftCTX.fillStyle = e.ctrlKey ? color.current.bg.toHex() : color.current.fg.toHex()
-    this.draft.style.opacity = this.opacity.toString()
-    // this.draftCTX.globalCompositeOperation = 'darken'
-    this.primaryCTX.globalAlpha = this.opacity
+    project.active.setOpacity(this.opacity)
     this.lastPoint = { x: this.mouse.x, y: this.mouse.y }
     this.draw(this.lastPoint)
   }
 
   public mouseup() {
     this.isDrawing = false
-    this.apply()
+    // this.apply()
   }
 
   public mousemove(e: MouseEvent) {
@@ -72,23 +63,49 @@ export class brushCanvas extends canvas {
   }
 
   private draw(currentPoint: point) {
-    this.draftCTX.beginPath()
-    this.draftCTX.moveTo(this.lastPoint.x, this.lastPoint.y)
-    this.draftCTX.lineTo(currentPoint.x, currentPoint.y)
-    // this.draftCTX.stroke()
-    this.brushLine(this.lastPoint, currentPoint)
+    if (!project.active.layers.active) return
+    project.active.toActiveLayer((ctx) => {
+      // let ctx = project.active.ctxDraft
+      ctx.beginPath()
+      ctx.moveTo(this.lastPoint.x, this.lastPoint.y)
+      ctx.lineTo(currentPoint.x, currentPoint.y)
+      this.brushLine(this.lastPoint, currentPoint)
+      this.apply()
+    })
   }
 
-  private brushLine(lastpoint: point, currentpoint: point) {
-    let distance = parseInt(this.distanceBetween2Points(lastpoint, currentpoint).toString())
-    let angle = this.angleBetween2Points(lastpoint, currentpoint)
-    let x = 0, y = 0
-    let steps = (this.softness / 100 * (this.lineWidth / 4))
-    for (let z = 0; (z <= distance || z == 0); z += steps) {
-      x = lastpoint.x + (Math.sin(angle) * z) - (this.lineWidth / 2)
-      y = lastpoint.y + (Math.cos(angle) * z) - (this.lineWidth / 2)
-      this.draftCTX.drawImage(this.brush, x, y)
+  private brushLine(lastPoint: point, currentPoint: point) {
+    let active = project.active.layers.active
+    if (!active) return
+    let x1 = lastPoint.x, x2 = currentPoint.x, y1 = lastPoint.y, y2 = currentPoint.y
+    let bw = this.lineWidth, bh = this.lineWidth
+
+    var diffX = Math.abs(x2 - x1),
+      diffY = Math.abs(y2 - y1),
+      dist = Math.sqrt(diffX * diffX + diffY * diffY),
+      step = (this.softness / 100 * (this.lineWidth / 4)),// bw / (dist ? dist : 1),
+      i = 0,
+      t = 0,
+      b, x, y;
+
+    while (i <= dist) {
+      t = Math.max(0, Math.min(1, i / dist));
+      x = x1 + (x2 - x1) * t;
+      y = y1 + (y2 - y1) * t;
+      b = (Math.random() * 3) | 0;
+      active.ctx.drawImage(this.brush, x - bw * 0.5, y - bh * 0.5);
+      i += step
     }
+
+    // let distance = parseInt(this.distanceBetween2Points(lastPoint, currentPoint).toString())
+    // let angle = this.angleBetween2Points(lastPoint, currentPoint)
+    // let x = 0, y = 0
+    // let steps = (this.softness / 100 * (this.lineWidth / 4))
+    // for (let z = 0; (z <= distance || z == 0); z += steps) {
+    //   x = lastPoint.x + (Math.sin(angle) * z) - (this.lineWidth / 2)
+    //   y = lastPoint.y + (Math.cos(angle) * z) - (this.lineWidth / 2)
+    //   this.draftCTX.drawImage(this.brush, x, y)
+    // }
   }
 
   private distanceBetween2Points(point1: point, point2: point) {

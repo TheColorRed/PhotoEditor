@@ -1,0 +1,82 @@
+.workarea {
+  display: flex;
+  background-color: $dark-color;
+  height: inherit;
+  flex-grow: 1;
+  z-index: 99;
+  position: relative;
+  flex-direction: column;
+
+  .workarea-tab-group {
+    min-height: 30px;
+    max-height: 30px;
+    background: $secondary-color;
+    flex: 1 auto;
+    display: flex;
+    flex-direction: row;
+
+    & > .tab {
+      color: $font-color;
+      font-size: 0.7rem;
+      padding: 5px 10px;
+      border: solid 1px $border-color;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      & > .close {
+        height: 17px;
+        width: 17px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // background-color: rgb(255, 110, 110);
+        margin-left: 5px;
+
+        & > svg {
+          fill: $font-color;
+          width: 11px;
+          // width: calc(100% - 3px);
+        }
+
+        &:hover {
+          background-color: rgb(255, 110, 110);
+        }
+      }
+
+      &:not(:first-child) {
+        border-left: 0;
+      }
+
+      &.active {
+        background-color: $primary-color;
+        border-bottom: $primary-color;
+      }
+
+      &.drag-hover {
+        background-color: lighten($primary-color, 10%);
+      }
+    }
+  }
+
+  .workarea-group {
+    height: calc(100% - 30px);
+
+    .project {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      overflow: auto;
+      position: relative;
+    }
+  }
+
+  .primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

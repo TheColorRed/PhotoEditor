@@ -1,5 +1,6 @@
 import { plugin, pluginGroup } from "./plugin";
 import { tool, toolSettings } from "./tool";
+import { project } from "../util/project";
 
 export interface canvas {
   mousedown(event: MouseEvent): void
@@ -12,18 +13,19 @@ export interface canvas {
 export enum button { none = -1, left = 0, middle = 1, right = 2 }
 
 export abstract class canvas extends plugin {
-  protected primaryCanvas: HTMLCanvasElement
+  // protected primaryCanvas: HTMLCanvasElement
   protected workarea: HTMLElement
-  protected primaryCTX: CanvasRenderingContext2D
-  protected draft: HTMLCanvasElement
-  protected draftCTX: CanvasRenderingContext2D
+  // protected primaryCTX: CanvasRenderingContext2D
+  // protected draft: HTMLCanvasElement
+  // protected draftCTX: CanvasRenderingContext2D
   protected rect: ClientRect = document.body.getBoundingClientRect()
   protected mouse: { x: number, y: number } = { x: 0, y: 0 }
   protected button: button = button.none
   protected onCanvas: boolean = false
 
-  protected get width() { return this.primaryCanvas.width }
-  protected get height() { return this.primaryCanvas.height }
+  protected get width() { return project.active.width }
+  protected get height() { return project.active.height }
+
   protected get toolSettings() {
     let plug = plugin.plugins.find(p => p.id == this.groupid) as pluginGroup
     let t = plug.plugins.find(p => p instanceof tool) as tool
@@ -34,15 +36,17 @@ export abstract class canvas extends plugin {
 
   public constructor(groupid: string) {
     super(groupid)
-    this.workarea = document.querySelector('.workarea') as HTMLElement
-    this.primaryCanvas = document.querySelector('canvas#primary') as HTMLCanvasElement
-    this.primaryCTX = this.primaryCanvas.getContext('2d') as CanvasRenderingContext2D
-    this.rect = this.primaryCanvas.getBoundingClientRect()
-    this.draft = document.querySelector('canvas#draft') as HTMLCanvasElement
-    this.draftCTX = this.draft.getContext('2d') as CanvasRenderingContext2D
+    this.workarea = document.querySelector('.workarea-group') as HTMLElement
+    // this.workspaceChanged()
+    // let proj = project.getProject()
+    // this.primaryCanvas = proj.canvasPrimary
+    // this.primaryCTX = this.primaryCanvas.getContext('2d') as CanvasRenderingContext2D
+    // this.rect = this.primaryCanvas.getBoundingClientRect()
+    // this.draft = proj.canvasDraft
+    // this.draftCTX = this.draft.getContext('2d') as CanvasRenderingContext2D
 
-    this.primaryCTX.save()
-    this.draftCTX.save()
+    // this.primaryCTX.save()
+    // this.draftCTX.save()
 
     window.addEventListener('mousemove', this.onMouseMove.bind(this))
     window.addEventListener('mouseup', this.onMouseUp.bind(this))
@@ -51,9 +55,24 @@ export abstract class canvas extends plugin {
     this.workarea.addEventListener('mouseleave', this.onMouseLeave.bind(this))
   }
 
+  // protected workspaceChanged() {
+  //   let proj = project.getProject()
+  //   this.primaryCanvas = proj.canvasPrimary// document.querySelector('canvas#primary') as HTMLCanvasElement
+  //   this.primaryCTX = this.primaryCanvas.getContext('2d') as CanvasRenderingContext2D
+  //   this.rect = this.primaryCanvas.getBoundingClientRect()
+  //   this.draft = proj.canvasDraft// document.querySelector('canvas#draft') as HTMLCanvasElement
+  //   this.draftCTX = this.draft.getContext('2d') as CanvasRenderingContext2D
+
+  //   this.primaryCTX.save()
+  //   this.draftCTX.save()
+  // }
+
   protected apply() {
-    this.primaryCTX.drawImage(this.draft, 0, 0)
-    this.draftCTX.clearRect(0, 0, this.width, this.height)
+    let layer = project.active.layers.active
+    if (!layer) return
+    layer.ctx.drawImage(project.active.canvasDraft, 0, 0)
+    project.active.ctxDraft.clearRect(0, 0, this.width, this.height)
+    project.active.updateMainCanvas()
   }
 
   public onTool() {
@@ -68,7 +87,7 @@ export abstract class canvas extends plugin {
 
   private onMouseDown(e: MouseEvent) {
     this.button = e.button
-    this.rect = this.primaryCanvas.getBoundingClientRect()
+    this.rect = project.active.getBoundingClientRect()
     let group = this.getGroup()
     let currentToolGroup = tool.activeTool && tool.activeTool.getGroup()
     group == currentToolGroup && typeof this.mousedown == 'function' && this.mousedown(e)
@@ -85,7 +104,8 @@ export abstract class canvas extends plugin {
   private onMouseUp(e: MouseEvent) {
     this.button = button.none
     let group = this.getGroup()
-    this.primaryCTX.globalCompositeOperation = 'source-over'
+    project.active.setGlobalCompositeOperation('source-over')
+    // project.active.ctxPrimary.globalCompositeOperation = 'source-over'
     let currentToolGroup = tool.activeTool && tool.activeTool.getGroup()
     group == currentToolGroup && typeof this.mouseup == 'function' && this.mouseup(e)
   }
@@ -105,6 +125,22 @@ export abstract class canvas extends plugin {
   }
 
   public resized() {
-    this.rect = this.primaryCanvas.getBoundingClientRect()
+    this.rect = project.active.getBoundingClientRect()
+  }
+
+  public static drawBackgroundPattern(canvas: HTMLCanvasElement, squareSize = 15) {
+    let ctx = canvas.getContext('2d')
+    if (!ctx) return
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+    let width = canvas.width
+    let height = canvas.height
+    let i = 0
+    for (let x = 0; x < width; x += squareSize) {
+      for (let y = 0; y < height; y += squareSize) {
+        ctx.fillStyle = i++ % 2 == 0 ? '#888' : '#fff'
+        ctx.fillRect(x, y, squareSize, squareSize)
+      }
+      i++
+    }
   }
 }

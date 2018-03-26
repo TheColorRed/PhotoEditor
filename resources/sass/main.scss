@@ -24,24 +24,6 @@ body {
       flex-direction: row;
       height: calc(100vh - #{$options-height});
 
-      .workarea {
-        display: flex;
-        background-color: $dark-color;
-        height: inherit;
-        flex-grow: 1;
-        align-items: center;
-        justify-content: center;
-        z-index: 99;
-        overflow: auto;
-        position: relative;
-
-        .primary {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-      }
-
       .panels {
         min-width: 300px;
         max-width: 300px;
@@ -57,3 +39,4 @@ body {
 @import './components/tools';
 @import './components/options';
 @import './components/panels';
+@import './components/workarea';

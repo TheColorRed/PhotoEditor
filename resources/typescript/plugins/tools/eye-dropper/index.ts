@@ -1,9 +1,10 @@
 import { tool, paths, canvas, color } from "../../../api";
 import { toolIcon, toolSetting } from "../../../api/plugin/tool";
 import { button } from "../../../api/plugin/canvas";
+import { project } from "../../../api/util/project";
 
 export class eyeDropperTool extends tool {
-  toolName: string = 'Eye Droppper'
+  toolName: string = 'Eye Dropper'
   toolbarIcon: toolIcon = { label: 'Eye Dropper', icon: paths.images + '/eye-dropper.svg' }
   settings: toolSetting[] = []
 }
@@ -30,7 +31,7 @@ export class eyeDropperCanvas extends canvas {
   }
 
   private setColor() {
-    let data = this.primaryCTX.getImageData(this.mouse.x, this.mouse.y, 1, 1).data
+    let data = project.active.ctxPrimary.getImageData(this.mouse.x, this.mouse.y, 1, 1).data
     let rgb = new color(data[0], data[1], data[2])
     if (this.button == button.left) color.current.fg = rgb
     if (this.button == button.right) color.current.bg = rgb

@@ -5,11 +5,15 @@ import * as glob from 'glob'
 import * as path from 'path'
 import { addons, addon, addonType, plugin, pluginGroup } from '../api';
 import { clientPanels } from '../api/util/panels';
+import { project } from '../api/util/project';
 document.addEventListener('DOMContentLoaded', e => {
-  let mainCanvas = document.querySelector('canvas#primary') as HTMLCanvasElement
-  let canvasBg = document.querySelector('canvas#bg') as HTMLCanvasElement
-  let ctx = mainCanvas.getContext('2d')
-  let canvasRect = mainCanvas.getBoundingClientRect()
+  // let mainCanvas = document.querySelector('canvas#primary') as HTMLCanvasElement
+  // let canvasBg = document.querySelector('canvas#bg') as HTMLCanvasElement
+  // let ctx = mainCanvas.getContext('2d')
+  // let canvasRect = mainCanvas.getBoundingClientRect()
+
+  let p = new project(800, 600)
+  project.setActive(p)
 
   glob(path.join(__dirname, '../plugins/*/*/index.js'), (err, files) => {
     files.forEach(file => {
@@ -22,37 +26,23 @@ document.addEventListener('DOMContentLoaded', e => {
           p instanceof tool && p.init()
           p instanceof panel && p.init()
           pg.add(p)
-        } catch (e) { console.error(e.message) }
+        } catch (err) {
+          let e: Error = err
+          console.error(e.stack)
+        }
       }
       pg.loaded()
     })
     clientPanels.init()
   })
 
-  function drawBG() {
-    let ctx = canvasBg.getContext('2d')
-    if (!ctx) return
-    ctx.clearRect(0, 0, canvasBg.width, canvasBg.height)
-    let width = canvasBg.width
-    let height = canvasBg.height
-    let squareSize = 15
-    let i = 0
-    for (let x = 0; x < width; x += squareSize) {
-      for (let y = 0; y < height; y += squareSize) {
-        ctx.fillStyle = i++ % 2 == 0 ? '#888' : '#fff'
-        ctx.fillRect(x, y, squareSize, squareSize)
-      }
-      i++
-    }
-  }
-
   window.addEventListener('resize', e => {
     plugin.plugins.forEach(c => {
       c.plugins.forEach(c => c instanceof canvas && c.resized())
     })
-    drawBG()
+    // drawBG()
   })
 
-  drawBG()
+  // drawBG()
 
 })

@@ -3,7 +3,7 @@ import { colorPicker } from './canvas/colorPicker';
 import { huePicker } from './canvas/huePicker';
 export class colorPanel extends panel {
 
-  protected key: string = 'colors'
+  protected key: string = 'panel-colors'
   protected label: string = 'Colors'
   public panelGroup: number = 0
   protected cp?: colorPicker
