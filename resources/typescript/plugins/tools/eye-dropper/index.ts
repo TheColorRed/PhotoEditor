@@ -31,7 +31,7 @@ export class eyeDropperCanvas extends canvas {
   }
 
   private setColor() {
-    let data = project.active.ctxPrimary.getImageData(this.mouse.x, this.mouse.y, 1, 1).data
+    let data = project.active.getPixel(this.mouse.x, this.mouse.y).data
     let rgb = new color(data[0], data[1], data[2])
     if (this.button == button.left) color.current.fg = rgb
     if (this.button == button.right) color.current.bg = rgb

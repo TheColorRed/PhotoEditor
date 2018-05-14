@@ -105,6 +105,7 @@ export abstract class canvas extends plugin {
     this.button = button.none
     let group = this.getGroup()
     project.active.setGlobalCompositeOperation('source-over')
+    if (project.active.layers.active) project.active.layers.active.ctx.globalCompositeOperation = 'source-over'
     // project.active.ctxPrimary.globalCompositeOperation = 'source-over'
     let currentToolGroup = tool.activeTool && tool.activeTool.getGroup()
     group == currentToolGroup && typeof this.mouseup == 'function' && this.mouseup(e)

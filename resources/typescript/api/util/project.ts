@@ -87,9 +87,14 @@ export class project {
     }
   }
 
+  public getPixel(x: number, y: number) {
+    return this._ctxPrimary.getImageData(x, y, 1, 1)
+  }
+
   public getBoundingClientRect() {
     return this._canvasPrimary.getBoundingClientRect()
   }
+
   public setGlobalCompositeOperation(operation: string) {
     this._ctxPrimary.globalCompositeOperation = operation
   }
